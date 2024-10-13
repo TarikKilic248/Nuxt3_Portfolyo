@@ -1,28 +1,26 @@
 <script setup lang="ts">
-import type { Todo } from "~/types";
+definePageMeta({
+  name: 'todo',
+})
 
-const todoList = ref<Todo[]>();
+const todoStore = useTodoStore()
 
-fetch("https://dummyjson.com/todos")
-  .then((res) => res.json())
-  .then((nw) => {
-    console.log(nw);
-    todoList.value = nw.todos;
-  });
+onMounted(async () => {
+  await todoStore.fetchTodoList()
+})
+// GÖREV 2
+// elindeki userId lere göre bu kullanıcıların resimlerini ve isimlerini göstermelisin https://randomuser.me/
+// bunun için Todo tipini değiştirmen gerekecek yeni tipte nasıl bir yapı izleyeceğin çok önemli.
+// opsiyonel: zorluk istiyorsan fakerapi kullanarak kullanıcı bilgilerini detaylandırabilirsin ama bu yola girersen todonun eklenme tarihini görmek ve bunu filtreleyebilmek isterim
+
+// yapılan görevler, yapılmayan görevler ve tümünü göster filtresi olmalı
+// aynı kullanıcının birden fazla taskı olabiliyor, kullanıcıya göre filtrelenebilmeli. nuxtui dan selectmenu kullanarak bu filtrelemeyi yapmalısın ve filtrelerken userların resimlerini de görmek istiyorum
 </script>
 
 <template>
-  <NuxtLink class to="/about">Go To About Page /</NuxtLink>
-  <NuxtLink to="/">   Go To Home Page</NuxtLink>
-
-  <div v-for="todo in todoList" :key="todo.id">
-    <CardTodo class="my-2" :todo="todo" />
-  </div>
-
+  <NuxtLayout name="default">
+    <div class="p-8 text-center 'söz uçar forecolor :D' flex h-full overflow-auto">
+      {{ todoStore.todoList }}
+    </div>
+  </NuxtLayout>
 </template>
-
-<style>
-body {
-  background-color: rgb(124, 163, 163);
-}
-</style>
