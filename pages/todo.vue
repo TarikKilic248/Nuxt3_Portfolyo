@@ -8,6 +8,7 @@ const todoStore = useTodoStore()
 onMounted(async () => {
   await todoStore.fetchTodoList()
 })
+
 // GÖREV 2
 // elindeki userId lere göre bu kullanıcıların resimlerini ve isimlerini göstermelisin https://randomuser.me/
 // bunun için Todo tipini değiştirmen gerekecek yeni tipte nasıl bir yapı izleyeceğin çok önemli.
@@ -19,8 +20,25 @@ onMounted(async () => {
 
 <template>
   <NuxtLayout name="default">
-    <div class="p-8 text-center 'söz uçar forecolor :D' flex h-full overflow-auto">
-      {{ todoStore.todoList }}
+    <div class="w-full h-full flex flex-col lg:flex-row justify-between p-4 gap-4">
+      <div class="w-full lg:h-full h-2/6 flex lg:flex-col flex-row lg:justify-center justify-between items-center gap-3 myBorder p-4">
+        <CardProfileImage />
+        <CardProfileDescriptions />
+        <div class="flex lg:flex-row flex-col gap-2">
+          <CardButtons
+            v-for="item in ['Done', 'Not Done', 'All']"
+            :key="item"
+            :label="item"
+          />
+        </div>
+      </div>
+      <CardTodoList class="w-full h-full myBorder p-4 overflow-auto" />
     </div>
   </NuxtLayout>
 </template>
+
+<style>
+.myBorder {
+  @apply border rounded dark:border-gray-700 border-gray-300
+}
+</style>

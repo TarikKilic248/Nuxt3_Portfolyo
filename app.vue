@@ -14,6 +14,17 @@
 // Burası için görevin sitene temel bir SEO yapılandırması eklemek.
 // https://nuxt.com/docs/getting-started/seo-meta
 // (yaptığın seonun bu aşamada işe yarar olmasına gerek yok, sadece basit bir yapılandırma olması yeterli)
+
+useHead({
+  title: 'Tarık Kılıç ALSANCAK',
+  meta: [
+    { name: 'To do list in nuxt', content: 'To do list of Tarik' },
+  ],
+  bodyAttrs: {
+    class: 'test',
+  },
+  script: [{ innerHTML: 'console.log(\'hello world\')' }],
+})
 </script>
 
 <template>
