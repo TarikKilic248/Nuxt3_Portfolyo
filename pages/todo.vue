@@ -4,9 +4,22 @@ definePageMeta({
 })
 
 const todoStore = useTodoStore()
+const userStore = useUserStore()
+
+const selectedUserId = ref<number>(0)
 
 onMounted(async () => {
   await todoStore.fetchTodoList()
+  await userStore.fetchUserList()
+})
+
+const getUserProfile = (userId: number) => {
+  const user = userStore.userList?.find(user => user.userId === userId)
+  return user ? user.picture : ""
+}
+
+const selectedUserPicture = computed(() => {
+  return getUserProfile(selectedUserId.value as number)
 })
 
 // GÖREV 2
@@ -21,18 +34,22 @@ onMounted(async () => {
 <template>
   <NuxtLayout name="default">
     <div class="w-full h-full flex flex-col lg:flex-row justify-between p-4 gap-4">
-      <div class="w-full lg:h-full h-2/6 flex lg:flex-col flex-row lg:justify-center justify-between items-center gap-3 myBorder p-4">
-        <CardProfileImage />
-        <CardProfileDescriptions />
-        <div class="flex lg:flex-row flex-col gap-2">
-          <CardButtons
+      <div class="w-full lg:h-full h-2/6 flex flex-col lg:justify-center justify-between items-center gap-3 myBorder p-4">
+        <UserProfileImage :src="selectedUserPicture" />
+        <UserSearchProfile v-model:selectedUserId="selectedUserId" />
+      </div>
+
+      <div class="myBorder flex flex-col">
+        <div class="flex justify-center flex-row items-center gap-3">
+          <ButtonSmall
             v-for="item in ['Done', 'Not Done', 'All']"
             :key="item"
+            class="flex myBorder items-center"
             :label="item"
           />
         </div>
+        <ListTodoList class="w-full h-full myBorder p-4 overflow-auto" />
       </div>
-      <CardTodoList class="w-full h-full myBorder p-4 overflow-auto" />
     </div>
   </NuxtLayout>
 </template>
