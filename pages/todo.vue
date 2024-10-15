@@ -6,20 +6,8 @@ definePageMeta({
 const todoStore = useTodoStore()
 const userStore = useUserStore()
 
-const selectedUserId = ref<number>(0)
-
 onMounted(async () => {
   await todoStore.fetchTodoList()
-  await userStore.fetchUserList()
-})
-
-const getUserProfile = (userId: number) => {
-  const user = userStore.userList?.find(user => user.userId === userId)
-  return user ? user.picture : ""
-}
-
-const selectedUserPicture = computed(() => {
-  return getUserProfile(selectedUserId.value as number)
 })
 
 // GÖREV 2
@@ -35,8 +23,9 @@ const selectedUserPicture = computed(() => {
   <NuxtLayout name="default">
     <div class="w-full h-full flex flex-col lg:flex-row justify-between p-4 gap-4">
       <div class="w-full lg:h-full h-2/6 flex flex-col lg:justify-center justify-between items-center gap-3 myBorder p-4">
-        <UserProfileImage :src="selectedUserPicture" />
-        <UserSearchProfile v-model:selectedUserId="selectedUserId" />
+        <!-- <UserProfileImage :src="todoStore.mergedArray[userStore.CurrentUser-200].picture" /> -->
+        {{ todoStore.UserWithTodo }}
+        <UserSearchProfile />
       </div>
 
       <div class="myBorder flex flex-col">

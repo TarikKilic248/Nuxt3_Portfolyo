@@ -1,12 +1,16 @@
-export interface Todo {
+export interface Todo{
   userId: number
   id: number
-  title: string
+  todo: string
   completed: boolean
 }
 
-export interface User {
-  userId: number
+export interface User{
+  id: number
   name: string
   picture: string
+}
+
+export interface UserWithTodo extends User{
+  todos: Todo[]
 }

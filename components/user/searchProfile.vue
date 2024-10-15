@@ -1,29 +1,27 @@
 <script setup lang="ts">
+const todoStore = useTodoStore()
 
-const userStore = useUserStore()
-const selectedUserId = ref<number>()
-const query = ref('')
+const selectedUser = ref < number > (1)
+const store = useUserStore()
 
-const selectedUser = computed(() => {
-  return userStore.userList?.find(user => user.userId === selectedUserId.value)
+function selectUser() {
+  store.CurrentUser = selectedUser.value
+}
+
+onMounted(async () => {
+  if (!todoStore.todoList)
+    await todoStore.fetchTodoList()
 })
-
 </script>
 
 <template>
-  <div>
-    <USelectMenu class="w-60"
-      v-model="selectedUserId"
-      v-model:query="query"
-      :options="userStore.userList?.map(user => ({ 
-        label: user.name, 
-        value: user.userId, 
-        thumbnail: user.picture 
-      }))"
-      placeholder="Select a person"
-      searchable
-    />
-  </div>
+  <USelectMenu
+    v-model="selectedUser"
+    class="w-60"
+    :options="todoStore.mergedArray"
+    placeholder="Select a person"
+    option-attribute="name"
+    value-attribute="id"
+    @change="selectUser"
+  />
 </template>
-
-  
