@@ -10,6 +10,16 @@ onMounted(async () => {
   await todoStore.fetchTodoList()
 })
 
+function navigateToTodo() {
+  const userId = userStore.selectedUserId
+  navigateTo({
+    name: 'todoDetail',
+    params: {
+      id: userId,
+    },
+  })
+}
+
 // GÖREV 2
 // elindeki userId lere göre bu kullanıcıların resimlerini ve isimlerini göstermelisin https://randomuser.me/
 // bunun için Todo tipini değiştirmen gerekecek yeni tipte nasıl bir yapı izleyeceğin çok önemli.
@@ -23,20 +33,14 @@ onMounted(async () => {
   <NuxtLayout name="default">
     <div class="w-full h-full flex flex-col lg:flex-row justify-between p-4 gap-4">
       <div class="w-full lg:h-full h-2/6 flex flex-col lg:justify-center justify-between items-center gap-3 myBorder p-4">
-        <!-- <UserProfileImage :src="todoStore.mergedArray[userStore.CurrentUser-200].picture" /> -->
-        {{ todoStore.UserWithTodo }}
+        <UserProfileImage />
+        {{ userStore.selectedUser?.todos }}
         <UserSearchProfile />
+        <ButtonSmall label="Görevlere git" @click="navigateToTodo" />
       </div>
 
-      <div class="myBorder flex flex-col">
-        <div class="flex justify-center flex-row items-center gap-3">
-          <ButtonSmall
-            v-for="item in ['Done', 'Not Done', 'All']"
-            :key="item"
-            class="flex myBorder items-center"
-            :label="item"
-          />
-        </div>
+      <div class="myBorder lg:w-2/5 flex flex-col overflow-auto">
+        <div class="flex justify-center flex-row items-center gap-3" />
         <ListTodoList class="w-full h-full myBorder p-4 overflow-auto" />
       </div>
     </div>

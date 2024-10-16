@@ -1,7 +1,7 @@
 <script setup lang="ts">
-const props = defineProps({
-  src: String,
-})
+const userStore = useUserStore()
+
+const src = computed(() => userStore.selectedUser?.picture)
 </script>
 
 <template>

@@ -1,19 +1,13 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import type { Todo, UserWithTodo } from '~/types';
 
 export const useUserStore = defineStore('user', () => {
-  const selectedUser = ref<number | null>(null)
-
-  const CurrentUser = computed({
-    get() {
-      return selectedUser.value;
-    },
-    set(val: number) {
-      selectedUser.value = val;
-    }
-  });
+  const selectedUser = ref<UserWithTodo>();
+  const selectedUserId = computed(() => selectedUser.value?.id)
 
   return {
-    CurrentUser,
+    selectedUser,
+    selectedUserId,
   }
 });

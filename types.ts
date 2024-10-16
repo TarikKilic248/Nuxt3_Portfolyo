@@ -1,8 +1,9 @@
 export interface Todo{
   userId: number
   id: number
-  todo: string
+  title: any
   completed: boolean
+  todo: string
 }
 
 export interface User{

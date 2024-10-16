@@ -1,27 +1,29 @@
 <script setup lang="ts">
-const todoStore = useTodoStore()
+import type { UserWithTodo } from '~/types';
 
-const selectedUser = ref < number > (1)
-const store = useUserStore()
+const todoStore = useTodoStore()
+const userStore = useUserStore()
+
+const selectedUser = ref < UserWithTodo > ()
 
 function selectUser() {
-  store.CurrentUser = selectedUser.value
+  userStore.selectedUser = selectedUser.value
 }
 
 onMounted(async () => {
   if (!todoStore.todoList)
     await todoStore.fetchTodoList()
 })
+
 </script>
 
 <template>
   <USelectMenu
     v-model="selectedUser"
-    class="w-60"
-    :options="todoStore.mergedArray"
+    class="xs:w-40 w-60"
+    :options="todoStore.UserWithTodo"
     placeholder="Select a person"
     option-attribute="name"
-    value-attribute="id"
     @change="selectUser"
   />
 </template>
