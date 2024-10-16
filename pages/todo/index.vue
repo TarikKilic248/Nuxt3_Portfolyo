@@ -34,7 +34,6 @@ function navigateToTodo() {
     <div class="w-full h-full flex flex-col lg:flex-row justify-between p-4 gap-4">
       <div class="w-full lg:h-full h-2/6 flex flex-col lg:justify-center justify-between items-center gap-3 myBorder p-4">
         <UserProfileImage />
-        {{ userStore.selectedUser?.todos }}
         <UserSearchProfile />
         <ButtonSmall label="Görevlere git" @click="navigateToTodo" />
       </div>
