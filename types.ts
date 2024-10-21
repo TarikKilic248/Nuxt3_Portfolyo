@@ -26,6 +26,7 @@ export interface PokemonContent {
   stats: object
   types: object
   weight: number
+  location_area_encounters: string
 }
 
 export interface Pokemons {

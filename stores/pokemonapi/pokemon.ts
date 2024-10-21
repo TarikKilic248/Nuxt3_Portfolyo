@@ -3,6 +3,8 @@ import type { Pokemon, Pokemons } from '~/types'
 export const usePokemonStore = defineStore('pokemon', () => {
   const pokemons = ref<Pokemons[]>([])
 
+  const selectedPokemon = ref()
+
   const fetchPokemonApi = async () => {
     try {
       const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=50')
@@ -49,6 +51,8 @@ export const usePokemonStore = defineStore('pokemon', () => {
 
           const base_experience = details.base_experience
 
+          const location_area_encounters = details.location_area_encounters
+
           const types: { [key: string]: { slot: number, url: string } } = {}
           details.types.forEach((element: { type: { name: string, url: string }, slot: number }) => {
             const statName = element.type.name
@@ -69,6 +73,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
               stats,
               types,
               weight,
+              location_area_encounters,
             },
 
           }
@@ -85,6 +90,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
 
   return {
     pokemons,
+    selectedPokemon,
 
     fetchPokemonApi,
   }
