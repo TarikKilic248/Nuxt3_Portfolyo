@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{
-    label: string
+  label: string
 }>()
 </script>
 
@@ -12,8 +12,7 @@ const props = defineProps<{
     <div
       class="absolute inset-0 flex h-full w-full justify-center [transform:skew(-13deg)_translateX(-100%)] group-hover/button:duration-1000 group-hover/button:[transform:skew(-13deg)_translateX(100%)]"
     >
-      <div class="relative h-full w-10 dark:bg-white/20 bg-gray-100"></div>
+      <div class="relative h-full w-10 dark:bg-white/20 bg-gray-100" />
     </div>
   </button>
-  
-  </template>
+</template>

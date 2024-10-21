@@ -8,6 +8,6 @@ export default defineNuxtConfig({
     head: {
       charset: 'utf-8',
       viewport: 'width=device-width, inital-scale=1',
-    }
-  }
+    },
+  },
 })

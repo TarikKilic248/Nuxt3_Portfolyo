@@ -4,4 +4,7 @@ export default antfu({
   rules: {
     'no-undef': 'off',
   },
+  typescript: true,
+  vue: true,
+
 })

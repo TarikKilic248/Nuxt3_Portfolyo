@@ -1,4 +1,4 @@
-export interface Todo{
+export interface Todo {
   userId: number
   id: number
   title: any
@@ -6,24 +6,34 @@ export interface Todo{
   todo: string
 }
 
-export interface User{
+export interface User {
   id: number
   name: string
   picture: string
 }
 
-export interface UserWithTodo extends User{
+export interface UserWithTodo extends User {
   todos: Todo[]
 }
 
-export interface Pokemon{
+export interface PokemonContent {
+  abilities: object
+  base_experience: number
+  cries: string
+  height: number
   name: string
-  url: string
+  sprites: object
+  stats: object
+  types: object
+  weight: number
 }
 
-export interface PokemonPage{
-  count: number
-  next: string
-  previous: string | null
-  results: Pokemon[]
+export interface Pokemons {
+  name: string
+  content: PokemonContent
+}
+
+export interface Pokemon {
+  name: string
+  url: string
 }

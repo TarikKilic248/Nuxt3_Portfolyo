@@ -1,62 +1,91 @@
-import type { Pokemon } from "~/types";
+import type { Pokemon, Pokemons } from '~/types'
 
 export const usePokemonStore = defineStore('pokemon', () => {
-    const pokemons = ref<Pokemon[]>([]);
+  const pokemons = ref<Pokemons[]>([])
 
-    const fetchPokemonApi = async () => {
-        try {
-            const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=50');
-            const data = await response.json();
+  const fetchPokemonApi = async () => {
+    try {
+      const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=50')
+      const data = await response.json()
 
-            const fetchedPokemons = await Promise.all(
-                data.results.map(async (pokemon: { name: string, url: string }) => {
-                    
-                    const detailsResponse = await fetch(pokemon.url);
-                    const details = await detailsResponse.json();
+      const fetchedPokemons = await Promise.all(
+        data.results.map(async (pokemon: { name: string, url: string }) => {
+          const detailsResponse = await fetch(pokemon.url)
+          const details = await detailsResponse.json()
 
-                    
-                    const abilities = details.abilities.map((ability: any) => 
-                        `${ability.ability.name}, hidden: ${ability.is_hidden}`).join(' - ');
+          const height = details.height
 
-                    const base_experience = details.base_experience
+          const weight = details.weight
 
-                    const cries = {
-                        latest: `https://cries.com/latest/${pokemon.name}`,
-                        legacy: `https://cries.com/legacy/${pokemon.name}`,
-                    };
+          const sprites = {
+            front: details.sprites.front_default,
+            back: details.sprites.back_default,
+          }
 
-                    const forms = details.forms.map((form: any) => form.name).join(', ')
+          const cries = details.cries.latest
 
-                    const stats = details.stats.map((stat: any) => 
-                        `${stat.stat.name}: ${stat.base_stat}`).join(', ');
-                    
-                    const types = details.types.map((typeSlot: any) => typeSlot.type.name).join(', ');
+          //   const cries = {
+          //     latest: `https://cries.com/latest/${pokemon.name}`,
+          //     legacy: `https://cries.com/legacy/${pokemon.name}`,
+          //   }
 
-                    return {
-                        customId: pokemon.name,        
-                        abilities: abilities,         
-                        base_experience: base_experience,
-                        cries,
-                        stats,
-                        types,
-                        forms:forms,              
-                    };
-                })
-            );
+          const stats: { [key: string]: { base_stat: number, url: string } } = {}
+          details.stats.forEach((element: { stat: { name: string, url: string }, base_stat: number }) => {
+            const statName = element.stat.name
+            stats[statName] = {
+              base_stat: element.base_stat,
+              url: element.stat.url,
+            }
+          })
 
-            pokemons.value = fetchedPokemons;
+          const abilities: { [key: string]: { is_hidden: boolean, url: string } } = {}
+          details.abilities.forEach((element: { ability: { name: string, url: string }, is_hidden: boolean }) => {
+            const statName = element.ability.name
+            abilities[statName] = {
+              is_hidden: element.is_hidden,
+              url: element.ability.url,
+            }
+          })
 
-            localStorage.setItem('pokemons', JSON.stringify(fetchedPokemons));
+          const base_experience = details.base_experience
 
-        } catch (error) {
-            console.error("Pokémon verileri alınırken hata oluştu:", error);
-        }
-    };
+          const types: { [key: string]: { slot: number, url: string } } = {}
+          details.types.forEach((element: { type: { name: string, url: string }, slot: number }) => {
+            const statName = element.type.name
+            types[statName] = {
+              slot: element.slot,
+              url: element.type.url,
+            }
+          })
 
+          return {
+            name: pokemon.name,
+            content: {
+              abilities,
+              base_experience,
+              cries,
+              height,
+              sprites,
+              stats,
+              types,
+              weight,
+            },
 
-    return{
-        pokemons,
+          }
+        }),
+      )
 
-        fetchPokemonApi,
+      pokemons.value = fetchedPokemons
+      localStorage.setItem('pokemons', JSON.stringify(fetchedPokemons))
     }
+    catch (error) {
+      console.error('Pokémon verileri alınırken hata oluştu:', error)
+    }
+  }
+
+  return {
+    pokemons,
+
+    fetchPokemonApi,
+  }
 })

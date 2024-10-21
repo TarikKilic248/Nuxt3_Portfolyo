@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { UserWithTodo } from '~/types';
+import type { UserWithTodo } from '~/types'
 
 const todoStore = useTodoStore()
 const userStore = useUserStore()
@@ -14,7 +14,6 @@ onMounted(async () => {
   if (!todoStore.todoList)
     await todoStore.fetchTodoList()
 })
-
 </script>
 
 <template>
