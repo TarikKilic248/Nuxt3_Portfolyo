@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import PokemonCard from '~/components/pokemon/pokemonCard.vue'
 import { usePokemonStore } from '~/stores/pokemonapi/pokemon'
 import type { Pokemons } from '~/types'
 
@@ -34,7 +33,14 @@ onMounted(async () => {
 })
 
 const page = ref(1)
-const pageCount = 5
+const pageCount = 20
+
+const isOpen = ref(false)
+const openFilter = ref(false)
+const inputSelected = ref<string>('')
+const typeSelected = ref<string[]>([])
+const hpSelected = ref(50)
+const damageSelected = ref(50)
 
 function playCry(cryUrl: string) {
   const audio = new Audio(cryUrl)
@@ -42,20 +48,32 @@ function playCry(cryUrl: string) {
 }
 
 const rows = computed(() => {
-  return pokemons.value.slice((page.value - 1) * pageCount, page.value * pageCount).map((pokemon: Pokemons) => {
-    return {
-      name: pokemon.name,
-      heightWeight: `${pokemon.content.height} / ${pokemon.content.weight}`,
-      stats: `HP: ${pokemon.content.stats.hp.base_stat}, ATTACK: ${pokemon.content.stats.attack.base_stat}`,
-      types: Object.keys(pokemon.content.types).join(', '),
-      picture: pokemon.content.sprites.front,
-      backPicture: pokemon.content.sprites.back,
-      cries: pokemon.content.cries,
-      features: pokemon.content,
-      base_experience: pokemon.content.base_experience,
-      location_area_encounters: pokemon.content.location_area_encounters,
-    }
-  })
+  return pokemons.value
+    .filter((pokemon: Pokemons) => {
+      const hp = Number.parseInt(pokemon.content.stats.hp.base_stat)
+      const attack = Number.parseInt(pokemon.content.stats.attack.base_stat)
+
+      const types = Object.keys(pokemon.content.types) // types'ı array olarak alıyoruz
+      const matchesType = typeSelected.value.length === 0 || typeSelected.value.some(type => types.includes(type))
+
+      // Filtreleme için HP ve Attack sınırını kontrol ediyoruz
+      return hp <= hpSelected.value && attack <= damageSelected.value && matchesType
+    })
+    .slice((page.value - 1) * pageCount, page.value * pageCount) // Sayfalama işlemi
+    .map((pokemon: Pokemons) => {
+      return {
+        name: pokemon.name,
+        heightWeight: `${pokemon.content.height} / ${pokemon.content.weight}`,
+        stats: `HP: ${pokemon.content.stats.hp.base_stat}, ATTACK: ${pokemon.content.stats.attack.base_stat}`,
+        types: Object.keys(pokemon.content.types).join(', '),
+        picture: pokemon.content.sprites.front,
+        backPicture: pokemon.content.sprites.back,
+        cries: pokemon.content.cries,
+        features: pokemon.content,
+        base_experience: pokemon.content.base_experience,
+        location_area_encounters: pokemon.content.location_area_encounters,
+      }
+    })
 })
 
 const columnsTable = [
@@ -65,62 +83,87 @@ const columnsTable = [
   { key: 'types', label: 'Types' },
   { key: 'features', label: 'Features' },
 ]
-
-const isOpen = ref(false)
 </script>
 
 <template>
   <NuxtLayout name="default">
-    <div class="myBorder w-full h-full flex justify-center">
-      <div class="myBorder w-3/4">
-        <UTable :rows="rows" :columns="columnsTable">
-          <template #name-data="{ row }">
-            <div class="myBorder flex flex-row max-h-24">
-              <img
-                :src="row.picture"
-                class="myBorder -my-5 scale-75 hover:scale-100 cursor-pointer "
-                :alt="row.name"
-                @click="playCry(row.cries)"
-              >
-              <div class="flex justify-center items-center capitalize">
-                {{ row.name }}
-              </div>
-            </div>
-          </template>
-
-          <template #heightWeight-data="{ row }">
-            <div class="py-1 myBorder lining-nums text-center">
-              {{ row.heightWeight }}
-            </div>
-          </template>
-
-          <template #stats-data="{ row }">
-            <div class="py-1 myBorder">
-              {{ row.stats }}
-            </div>
-          </template>
-
-          <template #types-data="{ row }">
-            <div class="py-1 myBorder">
-              {{ row.types }}
-            </div>
-          </template>
-
-          <template #features-data="{ row }">
-            <UButton
-              label="Go to.." @click="() => {
-                isOpen = true;
-                pokemonStore.selectedPokemon = row;
-              }"
-            />
-          </template>
-        </UTable>
-
-        <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
-          <UPagination v-model="page" :page-count="pageCount" :total="pokemons.length" />
+    <div class="flex h-full flex-col justify-between gap-2">
+      <div class="h-16 py-5 px-10 flex gap-2 gap-x-8">
+        <h1 class="text-xl font-semibold">
+          Pokemon Filtreleme
+        </h1>
+        <UInput v-model="inputSelected" placeholder="Search.." />
+        <USelectMenu v-model="typeSelected" :options="pokemonStore.types" multiple placeholder="Select type" />
+        <div class="m-1 grid grid-cols-2">
+          <URange v-model="hpSelected" color="red" size="sm" class="w-40" />
+          <URange v-model="damageSelected" color="red" size="sm" class="w-40 ml-5" />
+          <p class="text-center">
+            HP: {{ hpSelected }}
+          </p>
+          <p class="text-center">
+            ATTACK: {{ damageSelected }}
+          </p>
         </div>
       </div>
+      {{ inputSelected }}
+      <UTable :rows="rows" :columns="columnsTable" class="h-full m-2">
+        <template #name-data="{ row }">
+          <div class="flex flex-row max-h-24 justify-start">
+            <img
+              :src="row.picture"
+              class="-my-5 scale-75 hover:scale-100 cursor-pointer animation-all duration-300 delay-100 hover:rounded-full"
+              :alt="row.name"
+              @click="playCry(row.cries)"
+              @mouseover="playCry(row.cries)"
+            >
+            <div class="flex items-center ml-5 capitalize font-sans font-bold text-lg">
+              {{ row.name }}
+            </div>
+          </div>
+        </template>
+
+        <template #heightWeight-data="{ row }">
+          <div class="py-1 lining-nums text-center">
+            <p class="font-sans font-bold text-lg">
+              {{ row.heightWeight }}
+            </p>
+          </div>
+        </template>
+
+        <template #stats-data="{ row }">
+          <div class="py-1 text-center">
+            <p class="font-sans font-bold text-lg">
+              {{ row.stats }}
+            </p>
+          </div>
+        </template>
+
+        <template #types-data="{ row }">
+          <div class="py-1 text-center">
+            <p class="font-sans font-bold capitalize text-lg">
+              {{ row.types }}
+            </p>
+          </div>
+        </template>
+
+        <template #features-data="{ row }">
+          <UButton
+            label="Details.." @click="() => {
+              isOpen = true;
+              pokemonStore.selectedPokemon = row;
+            }"
+          />
+        </template>
+      </UTable>
+      <div class="flex w-full justify-center">
+        <UPagination v-model="page" :page-count="pageCount" :total="pokemons.length" />
+      </div>
     </div>
+    <!--
+    <div class="flex justify-between px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
+      <ButtonFilter @click="openFilter = true" />
+      <UPagination v-model="page" :page-count="pageCount" :total="pokemons.length" />
+    </div> -->
   </NuxtLayout>
 
   <UModal v-model="isOpen" :overlay="false">
@@ -139,8 +182,8 @@ const isOpen = ref(false)
             </p>
           </div>
           <div class="flex items-center space-x-4">
-            <img :src="pokemonStore.selectedPokemon.picture" alt="Front sprite" class="w-16 h-16">
-            <img :src="pokemonStore.selectedPokemon.backPicture" alt="Back sprite" class="w-16 h-16">
+            <img :src="pokemonStore.selectedPokemon.picture" alt="Front sprite" class="scale-125">
+            <img :src="pokemonStore.selectedPokemon.backPicture" alt="Back sprite" class="scale-125">
           </div>
         </div>
       </template>

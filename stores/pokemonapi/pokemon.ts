@@ -2,12 +2,12 @@ import type { Pokemon, Pokemons } from '~/types'
 
 export const usePokemonStore = defineStore('pokemon', () => {
   const pokemons = ref<Pokemons[]>([])
-
+  const types = ref()
   const selectedPokemon = ref()
 
   const fetchPokemonApi = async () => {
     try {
-      const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=50')
+      const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1301')
       const data = await response.json()
 
       const fetchedPokemons = await Promise.all(
@@ -82,6 +82,14 @@ export const usePokemonStore = defineStore('pokemon', () => {
 
       pokemons.value = fetchedPokemons
       localStorage.setItem('pokemons', JSON.stringify(fetchedPokemons))
+
+      await fetch('https://pokeapi.co/api/v2/type/')
+        .then(_response => _response.json())
+        .then((_data) => {
+          types.value = _data.results
+        })
+
+      types.value = types.value.map((type: { name: string }) => type.name)
     }
     catch (error) {
       console.error('Pokémon verileri alınırken hata oluştu:', error)
@@ -90,6 +98,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
 
   return {
     pokemons,
+    types,
     selectedPokemon,
 
     fetchPokemonApi,
