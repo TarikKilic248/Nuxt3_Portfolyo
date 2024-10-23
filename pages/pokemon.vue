@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { usePokemonStore } from '~/stores/pokemonapi/pokemon'
-import type { Pokemons } from '~/types'
+import { usePokemonPage } from '~/stores/pokemonapi/pokemonPage'
 
 definePageMeta({
   name: 'pokemon',
@@ -18,71 +18,16 @@ definePageMeta({
 // fakat unutma eğer tercih ettiğin api, apikey gerektiriyorsa .env dosyasına eklemen çok önemli
 
 const pokemonStore = usePokemonStore()
-const pokemons = ref < [] > ([])
+const pokemonPageStore = usePokemonPage()
 
 onMounted(async () => {
-  const storedPokemons = localStorage.getItem('pokemons')
-
-  if (storedPokemons) {
-    pokemons.value = JSON.parse(storedPokemons)
-    await pokemonStore.fetchPokemonApi()
-  }
-  else {
-    await pokemonStore.fetchPokemonApi()
-  }
+  await pokemonStore.fetchPokemonApi()
 })
-
-const page = ref(1)
-const pageCount = 20
-
-const isOpen = ref(false)
-const openFilter = ref(false)
-const inputSelected = ref<string>('')
-const typeSelected = ref<string[]>([])
-const hpSelected = ref(50)
-const damageSelected = ref(50)
 
 function playCry(cryUrl: string) {
   const audio = new Audio(cryUrl)
   audio.play()
 }
-
-const rows = computed(() => {
-  return pokemons.value
-    .filter((pokemon: Pokemons) => {
-      const hp = Number.parseInt(pokemon.content.stats.hp.base_stat)
-      const attack = Number.parseInt(pokemon.content.stats.attack.base_stat)
-
-      const types = Object.keys(pokemon.content.types) // types'ı array olarak alıyoruz
-      const matchesType = typeSelected.value.length === 0 || typeSelected.value.some(type => types.includes(type))
-
-      // Filtreleme için HP ve Attack sınırını kontrol ediyoruz
-      return hp <= hpSelected.value && attack <= damageSelected.value && matchesType
-    })
-    .slice((page.value - 1) * pageCount, page.value * pageCount) // Sayfalama işlemi
-    .map((pokemon: Pokemons) => {
-      return {
-        name: pokemon.name,
-        heightWeight: `${pokemon.content.height} / ${pokemon.content.weight}`,
-        stats: `HP: ${pokemon.content.stats.hp.base_stat}, ATTACK: ${pokemon.content.stats.attack.base_stat}`,
-        types: Object.keys(pokemon.content.types).join(', '),
-        picture: pokemon.content.sprites.front,
-        backPicture: pokemon.content.sprites.back,
-        cries: pokemon.content.cries,
-        features: pokemon.content,
-        base_experience: pokemon.content.base_experience,
-        location_area_encounters: pokemon.content.location_area_encounters,
-      }
-    })
-})
-
-const columnsTable = [
-  { key: 'name', label: 'Name' },
-  { key: 'heightWeight', label: 'Height / Weight' },
-  { key: 'stats', label: 'Stats' },
-  { key: 'types', label: 'Types' },
-  { key: 'features', label: 'Features' },
-]
 </script>
 
 <template>
@@ -92,21 +37,40 @@ const columnsTable = [
         <h1 class="text-xl font-semibold">
           Pokemon Filtreleme
         </h1>
-        <UInput v-model="inputSelected" placeholder="Search.." />
-        <USelectMenu v-model="typeSelected" :options="pokemonStore.types" multiple placeholder="Select type" />
+        <UInput v-model="pokemonPageStore.inputSelected" placeholder="Search.." />
+        <USelectMenu v-model="pokemonPageStore.typeSelected" :options="pokemonStore.types" multiple placeholder="Select type" />
         <div class="m-1 grid grid-cols-2">
-          <URange v-model="hpSelected" color="red" size="sm" class="w-40" />
-          <URange v-model="damageSelected" color="red" size="sm" class="w-40 ml-5" />
+          <URange v-model="pokemonPageStore.hpSelected" color="red" size="sm" :max="200" class="w-40" />
+          <URange v-model="pokemonPageStore.damageSelected" color="red" size="sm" :max="200" class="w-40 ml-5" />
           <p class="text-center">
-            HP: {{ hpSelected }}
+            HP: {{ pokemonPageStore.hpSelected }}
           </p>
           <p class="text-center">
-            ATTACK: {{ damageSelected }}
+            ATTACK: {{ pokemonPageStore.damageSelected }}
           </p>
         </div>
       </div>
-      {{ inputSelected }}
-      <UTable :rows="rows" :columns="columnsTable" class="h-full m-2">
+      <!--
+      <div class="flex h-full flex-col justify-between gap-2">
+      <div class="flex w-full justify-start gap-4 items-center overflow-x-auto overflow-y-hidden py-2">
+        <UBadge label="Pokemon Filtreleme" variant="solid" color="gray" class="whitespace-nowrap w-full md:w-64 h-8 lg:text-lg text-sm" />
+
+        <UInput v-model="pokemonPageStore.inputSelected" placeholder="Search.." class="max-w-40 min-w-24" />
+
+        <USelectMenu v-model="pokemonPageStore.typeSelected" :options="pokemonStore.types" multiple placeholder="Select type" class="w-full md:w-auto" />
+        <div class="flex items-center min-w-64 gap-2 myBorder h-full px-2">
+          HP
+          <URange v-model="pokemonPageStore.hpSelected" label="asd" color="red" size="sm" :max="200" class="myBorder w-full md:w-40 " />
+          {{ pokemonPageStore.hpSelected }}
+        </div>
+        <div class="flex items-center min-w-64 gap-2 h-full px-2 myBorder">
+          ATTACK
+          <URange v-model="pokemonPageStore.damageSelected" label="asd" color="red" size="sm" :max="200" class="myBorder w-full md:w-40 " />
+          {{ pokemonPageStore.damageSelected }}
+        </div>
+      </div> -->
+
+      <UTable :rows="pokemonStore.paginatedRows" :columns="pokemonStore.pokemonColumns" class="h-full m-2">
         <template #name-data="{ row }">
           <div class="flex flex-row max-h-24 justify-start">
             <img
@@ -149,24 +113,19 @@ const columnsTable = [
         <template #features-data="{ row }">
           <UButton
             label="Details.." @click="() => {
-              isOpen = true;
+              pokemonPageStore.isOpen = true;
               pokemonStore.selectedPokemon = row;
             }"
           />
         </template>
       </UTable>
       <div class="flex w-full justify-center">
-        <UPagination v-model="page" :page-count="pageCount" :total="pokemons.length" />
+        <UPagination v-model="pokemonPageStore.page" :page-count="pokemonPageStore.pageCount" :total="pokemonPageStore.totalPage" />
       </div>
     </div>
-    <!--
-    <div class="flex justify-between px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
-      <ButtonFilter @click="openFilter = true" />
-      <UPagination v-model="page" :page-count="pageCount" :total="pokemons.length" />
-    </div> -->
   </NuxtLayout>
 
-  <UModal v-model="isOpen" :overlay="false">
+  <UModal v-model="pokemonPageStore.isOpen" :overlay="false">
     <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
       <template #header>
         <div class="flex items-center justify-between">
@@ -231,4 +190,8 @@ const columnsTable = [
       </template>
     </UCard>
   </UModal>
+
+  <div v-if="!pokemonStore.pokemons" class="fixed top-0 left-0 w-full h-full bg-gray-950 opacity-60 z-50 flex justify-center items-center">
+    <div class="h-6 w-6 border animate-spin" />
+  </div>
 </template>

@@ -28,5 +28,6 @@ useHead({
 </script>
 
 <template>
+  <NuxtLoadingIndicator />
   <NuxtPage />
 </template>

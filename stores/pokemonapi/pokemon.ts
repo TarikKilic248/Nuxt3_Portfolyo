@@ -1,13 +1,65 @@
-import type { Pokemon, Pokemons } from '~/types'
+import type { Pokemons } from '~/types'
+import { usePokemonPage } from './pokemonPage'
 
 export const usePokemonStore = defineStore('pokemon', () => {
-  const pokemons = ref<Pokemons[]>([])
+  const pokemonPageStore = usePokemonPage()
+
+  const pokemons = ref<Pokemons[]>()
   const types = ref()
   const selectedPokemon = ref()
 
+  const pokemonColumns = [
+    { key: 'name', label: 'Name' },
+    { key: 'heightWeight', label: 'Height / Weight' },
+    { key: 'stats', label: 'Stats' },
+    { key: 'types', label: 'Types' },
+    { key: 'features', label: 'Features' },
+  ]
+
+  const filteredRows = computed(() => {
+    return pokemons.value?.filter((pokemon: Pokemons) => {
+      const hp = pokemon.stats.hp.base_stat
+      const attack = pokemon.stats.attack.base_stat
+
+      const Poketypes = Object.keys(pokemon.types)
+      const matchesType = pokemonPageStore.typeSelected.length === 0 || pokemonPageStore.typeSelected.some(type => Poketypes.includes(type))
+
+      const matchesInput = pokemon.name.toLowerCase().includes(pokemonPageStore.inputSelected.toLowerCase())
+
+      return hp <= pokemonPageStore.hpSelected && attack <= pokemonPageStore.damageSelected && matchesType && matchesInput
+    })
+  })
+
+  pokemonPageStore.totalPage = computed(() => {
+    return filteredRows.value?.length
+  })
+
+  const mappedRows = computed(() => {
+    return pokemons.value?.map((pokemon: Pokemons) => {
+      return {
+        name: pokemon.name,
+        heightWeight: `${pokemon.height} / ${pokemon.weight}`,
+        stats: `HP: ${pokemon.stats.hp.base_stat}, ATTACK: ${pokemon.stats.attack.base_stat}`,
+        types: Object.keys(pokemon.types).join(', '),
+        picture: pokemon.sprites.front,
+        backPicture: pokemon.sprites.back,
+        cries: pokemon.cries,
+        features: pokemon,
+        base_experience: pokemon.base_experience,
+        location_area_encounters: pokemon.location_area_encounters,
+      }
+    })
+  })
+
+  const paginatedRows = computed(() => {
+    const startIndex = (pokemonPageStore.page - 1) * pokemonPageStore.pageCount
+    const endIndex = pokemonPageStore.page * pokemonPageStore.pageCount
+    return mappedRows.value?.slice(startIndex, endIndex)
+  })
+
   const fetchPokemonApi = async () => {
     try {
-      const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=1301')
+      const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=500')
       const data = await response.json()
 
       const fetchedPokemons = await Promise.all(
@@ -25,11 +77,6 @@ export const usePokemonStore = defineStore('pokemon', () => {
           }
 
           const cries = details.cries.latest
-
-          //   const cries = {
-          //     latest: `https://cries.com/latest/${pokemon.name}`,
-          //     legacy: `https://cries.com/legacy/${pokemon.name}`,
-          //   }
 
           const stats: { [key: string]: { base_stat: number, url: string } } = {}
           details.stats.forEach((element: { stat: { name: string, url: string }, base_stat: number }) => {
@@ -64,24 +111,21 @@ export const usePokemonStore = defineStore('pokemon', () => {
 
           return {
             name: pokemon.name,
-            content: {
-              abilities,
-              base_experience,
-              cries,
-              height,
-              sprites,
-              stats,
-              types,
-              weight,
-              location_area_encounters,
-            },
+            abilities,
+            base_experience,
+            cries,
+            height,
+            sprites,
+            stats,
+            types,
+            weight,
+            location_area_encounters,
 
           }
         }),
       )
 
       pokemons.value = fetchedPokemons
-      localStorage.setItem('pokemons', JSON.stringify(fetchedPokemons))
 
       await fetch('https://pokeapi.co/api/v2/type/')
         .then(_response => _response.json())
@@ -100,6 +144,9 @@ export const usePokemonStore = defineStore('pokemon', () => {
     pokemons,
     types,
     selectedPokemon,
+
+    paginatedRows,
+    pokemonColumns,
 
     fetchPokemonApi,
   }
