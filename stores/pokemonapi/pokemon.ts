@@ -35,7 +35,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
   })
 
   const mappedRows = computed(() => {
-    return pokemons.value?.map((pokemon: Pokemons) => {
+    return filteredRows.value?.map((pokemon: Pokemons) => {
       return {
         name: pokemon.name,
         heightWeight: `${pokemon.height} / ${pokemon.weight}`,
