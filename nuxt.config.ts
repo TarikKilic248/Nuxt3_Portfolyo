@@ -4,6 +4,13 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@pinia/nuxt', '@nuxt/ui'],
 
+  runtimeConfig: {
+    public: {
+      pokemonUrl: process.env.PUBLIC_POKEMON_URL,
+      pokemonTypeUrl: process.env.PUBLIC_POKEMON_TYPE_URL,
+    },
+  },
+
   app: {
     head: {
       charset: 'utf-8',

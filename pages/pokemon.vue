@@ -24,6 +24,11 @@ onMounted(async () => {
   await pokemonStore.fetchPokemonApi()
 })
 
+watch(() => pokemonStore.pokemonLimit, async () => {
+  pokemonStore.pokemons = undefined
+  await pokemonStore.fetchPokemonApi()
+})
+
 function playCry(cryUrl: string) {
   const audio = new Audio(cryUrl)
   audio.play()
@@ -39,36 +44,21 @@ function playCry(cryUrl: string) {
         </h1>
         <UInput v-model="pokemonPageStore.inputSelected" placeholder="Search.." />
         <USelectMenu v-model="pokemonPageStore.typeSelected" :options="pokemonStore.types" multiple placeholder="Select type" />
-        <div class="m-1 grid grid-cols-2">
-          <URange v-model="pokemonPageStore.hpSelected" color="red" size="sm" :max="200" class="w-40" />
-          <URange v-model="pokemonPageStore.damageSelected" color="red" size="sm" :max="200" class="w-40 ml-5" />
-          <p class="text-center">
-            HP: {{ pokemonPageStore.hpSelected }}
-          </p>
-          <p class="text-center">
-            ATTACK: {{ pokemonPageStore.damageSelected }}
-          </p>
-        </div>
-      </div>
-      <!--
-      <div class="flex h-full flex-col justify-between gap-2">
-      <div class="flex w-full justify-start gap-4 items-center overflow-x-auto overflow-y-hidden py-2">
-        <UBadge label="Pokemon Filtreleme" variant="solid" color="gray" class="whitespace-nowrap w-full md:w-64 h-8 lg:text-lg text-sm" />
-
-        <UInput v-model="pokemonPageStore.inputSelected" placeholder="Search.." class="max-w-40 min-w-24" />
-
-        <USelectMenu v-model="pokemonPageStore.typeSelected" :options="pokemonStore.types" multiple placeholder="Select type" class="w-full md:w-auto" />
-        <div class="flex items-center min-w-64 gap-2 myBorder h-full px-2">
+        <div class="flex items-center min-w-64 gap-2 h-full px-2">
           HP
-          <URange v-model="pokemonPageStore.hpSelected" label="asd" color="red" size="sm" :max="200" class="myBorder w-full md:w-40 " />
+          <URange v-model="pokemonPageStore.hpSelected" label="asd" color="red" size="sm" :max="200" class="w-full md:w-40 " />
           {{ pokemonPageStore.hpSelected }}
         </div>
-        <div class="flex items-center min-w-64 gap-2 h-full px-2 myBorder">
+        <div class="flex items-center min-w-64 gap-2 h-full px-2">
           ATTACK
-          <URange v-model="pokemonPageStore.damageSelected" label="asd" color="red" size="sm" :max="200" class="myBorder w-full md:w-40 " />
+          <URange v-model="pokemonPageStore.damageSelected" label="asd" color="red" size="sm" :max="200" class="w-full md:w-40 " />
           {{ pokemonPageStore.damageSelected }}
         </div>
-      </div> -->
+        <div>
+          <p>Number of pokemons(limit=1301)</p>
+          <UInput v-model="pokemonStore.pokemonLimit" type="number" class="w-24" placeholder="300" />
+        </div>
+      </div>
 
       <UTable :rows="pokemonStore.paginatedRows" :columns="pokemonStore.pokemonColumns" class="h-full m-2">
         <template #name-data="{ row }">
