@@ -14,6 +14,7 @@ definePageMeta({
     <div class="w-full h-full flex justify-center items-center gap-6">
       <ButtonGiant label="Todo List" @click="navigateTo({ name: 'todo' })" />
       <ButtonGiant label="Pokemon List" @click="navigateTo({ name: 'pokemon' })" />
+      <ButtonGiant label="TMDB" @click="navigateTo({ path: '/tmdb/movie' })" />
     </div>
   </NuxtLayout>
 </template>

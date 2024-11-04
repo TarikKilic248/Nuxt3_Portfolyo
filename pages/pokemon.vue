@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { usePokemonStore } from '~/stores/pokemonapi/pokemon'
-import { usePokemonPage } from '~/stores/pokemonapi/pokemonPage'
+import { usePokemonStore } from '~/stores/pokemon'
+import { usePokemonPage } from '~/stores/pokemon/pages'
 
 definePageMeta({
   name: 'pokemon',
@@ -42,7 +42,7 @@ function playCry(cryUrl: string) {
         <h1 class="text-xl font-semibold">
           Pokemon Filtreleme
         </h1>
-        <UInput v-model="pokemonPageStore.inputSelected" placeholder="Search.." />
+        <UInput v-model="pokemonPageStore.inputSelected" class="shrink-0" placeholder="Search.." />
         <USelectMenu v-model="pokemonPageStore.typeSelected" :options="pokemonStore.types" multiple placeholder="Select type" />
         <div class="flex items-center min-w-64 gap-2 h-full px-2">
           HP

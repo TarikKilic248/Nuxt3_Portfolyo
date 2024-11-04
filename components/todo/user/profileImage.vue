@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useUserStore } from '~/stores/todo/user'
+
 const userStore = useUserStore()
 
 const src = computed(() => userStore.selectedUser?.picture)

@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useUserStore } from '~/stores/user';
+import { computed, ref } from 'vue'
+import { useUserStore } from '~/stores/todo/user'
 
-const userStore = useUserStore();
-const filterType = ref('All');
+const userStore = useUserStore()
+const filterType = ref('All')
 
 const selectedUserTodo = computed(() => {
   switch (filterType.value) {
     case 'Done':
-      return userStore.selectedUser?.todos.filter(todo => todo.completed === true);
+      return userStore.selectedUser?.todos.filter(todo => todo.completed === true)
     case 'Not Done':
-      return userStore.selectedUser?.todos.filter(todo => todo.completed === false);
+      return userStore.selectedUser?.todos.filter(todo => todo.completed === false)
     case 'All':
     default:
-      return userStore.selectedUser?.todos;
+      return userStore.selectedUser?.todos
   }
-});
+})
 
-const handleButtonClick = (button: string) => {
-  filterType.value = button;
-};
+function handleButtonClick(button: string) {
+  filterType.value = button
+}
 </script>
 
 <template>
@@ -31,7 +31,6 @@ const handleButtonClick = (button: string) => {
         class="flex justify-between myBorder items-center"
         :label="item"
         @click="handleButtonClick(item)"
-        
       />
     </div>
 
@@ -49,7 +48,6 @@ const handleButtonClick = (button: string) => {
     </TransitionGroup>
   </div>
 </template>
-
 
 <style scoped>
 .list-enter-active,
