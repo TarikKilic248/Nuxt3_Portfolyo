@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
-import { usePokemonStore } from '~/stores/pokemon'
-import { usePokemonPage } from '~/stores/pokemon/pages'
+import { computed, onMounted, ref } from 'vue'
+import { usePokemonStore } from '~/stores/pokemonapi/pokemon'
+import { usePokemonPage } from '~/stores/pokemonapi/pokemonPage'
 
 definePageMeta({
   name: 'pokemon',
