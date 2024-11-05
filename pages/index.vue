@@ -12,22 +12,8 @@ const router = useRouter()
 <template>
   <NuxtLayout>
     <div class="w-full h-full flex justify-center items-center gap-6">
-      <ButtonGiant label="Todo List" @click="router.push({ name: 'todo' })" />
-      <ButtonGiant
-        label="Pokemon List"
-        @click="router.push({ name: 'pokemon' })"
-      />
-      <ButtonGiant
-        label="TMDB"
-        @click="
-          router.push({
-            name: 'tmdb',
-            params: {
-              media: 'movie',
-            },
-          })
-        "
-      />
+      <ButtonGiant label="Todo List" @click="navigateTo({ name: 'todo' })" />
+      <ButtonGiant label="Pokemon List" @click="navigateTo({ name: 'pokemon' })" />
     </div>
   </NuxtLayout>
 </template>
