@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useTodoStore } from '~/stores/todo'
+import { useUserStore } from '~/stores/todo/user'
+
 definePageMeta({
   name: 'todo',
 })
@@ -33,14 +36,14 @@ function navigateToTodo() {
   <NuxtLayout name="default">
     <div class="w-full h-full flex flex-col lg:flex-row justify-between p-4 gap-4">
       <div class="w-full lg:h-full h-2/6 flex flex-col lg:justify-center justify-between items-center gap-3 myBorder p-4">
-        <UserProfileImage />
-        <UserSearchProfile />
+        <TodoUserProfileImage />
+        <TodoUserSearchProfile />
         <ButtonSmall label="Görevlere git" @click="navigateToTodo" />
       </div>
 
       <div class="myBorder lg:w-2/5 flex flex-col overflow-auto">
         <div class="flex justify-center flex-row items-center gap-3" />
-        <ListTodoList class="w-full h-full myBorder p-4 overflow-auto" />
+        <TodoList class="w-full h-full myBorder p-4 overflow-auto" />
       </div>
     </div>
   </NuxtLayout>

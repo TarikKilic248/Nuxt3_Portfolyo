@@ -1,5 +1,5 @@
 import type { Pokemons } from '~/types'
-import { usePokemonPage } from './pokemonPage'
+import { usePokemonPage } from './pages'
 
 export const usePokemonStore = defineStore('pokemon', () => {
   const pokemonPageStore = usePokemonPage()

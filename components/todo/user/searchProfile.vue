@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useTodoStore } from '~/stores/todo'
+import { useUserStore } from '~/stores/todo/user'
 import type { UserWithTodo } from '~/types'
 
 const todoStore = useTodoStore()

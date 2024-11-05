@@ -37,3 +37,59 @@ export interface Pokemons {
   weight: number
   location_area_encounters: string
 }
+
+export interface Media {
+  adult: boolean
+  backdrop_path: string
+  genres: object
+  homepage: string
+  id: number
+  origin_country: []
+  original_language: string
+  popularity: number
+  poster_path: string
+  spoken_language: []
+  status: string
+  tagline: string
+  vote_average: number
+  vote_count: number
+  overview: string
+
+}
+
+export interface Movie extends Media {
+  belongs_to_collection: object
+  budget: number
+  imdb_id: string
+  original_title: string
+  release_date: string
+  revenue: number
+  runtime: number
+  title: string
+  video: boolean
+}
+
+export interface TVShow extends Media {
+  created_by: []
+  episode_run_time: number[]
+  first_air_date: string
+  in_production: boolean
+  languages: string[]
+  last_air_date: string
+  last_episode_to_air: object
+  name: string
+  next_episode_to_air: object
+  networks: string[]
+  number_of_episodes: number
+  number_of_seasons: number
+  original_name: string
+  seasons: []
+  type: string
+}
+
+export interface MediaList {
+  page: number
+  results: Media[]
+  total_pages: number
+  total_results: number
+}
