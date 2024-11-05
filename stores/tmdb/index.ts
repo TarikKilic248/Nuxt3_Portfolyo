@@ -1,3 +1,5 @@
+import { useRuntimeConfig } from 'nuxt/app'
+import { ref } from 'vue'
 import type { MediaList } from '~/types'
 
 export const useTmdbStore = defineStore('tmdb', () => {

@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { usePokemonStore } from '~/stores/pokemon'
 import { usePokemonPage } from '~/stores/pokemon/pages'
 
 definePageMeta({
   name: 'pokemon',
 })
+
 // GÖREV 3
 // pokemon api kullanarak pokemonları çek
 // çektiğin pokemonları nuxtui da bulunan table componenti ile listele

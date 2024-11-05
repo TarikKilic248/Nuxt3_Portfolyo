@@ -4,6 +4,7 @@ import { computed, onMounted, ref } from 'vue'
 export function linkProvider() {
   const colorMode = useColorMode()
   const isLoaded = ref(false) // Yüklenme durumu
+  const mediaType = ref('movie')
 
   // Uygulama yüklendiğinde isLoaded'ı true yap
   onMounted(() => {
@@ -32,9 +33,10 @@ export function linkProvider() {
       to: { name: 'pokemon' },
     }, {
       label: 'TMDB',
-      disabled: false,
       icon: 'i-heroicons-tv',
-      to: { name: 'tmdb' },
+      to: { name: 'tmdb', params: {
+        media: mediaType.value,
+      } },
     }, {
       class: 'flex items-center',
       // Yüklenme durumu için koşul ekliyoruz
