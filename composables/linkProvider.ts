@@ -1,9 +1,21 @@
-export const linkProvider = () => {
+import { useColorMode } from '@vueuse/core'
+import { computed, onMounted, ref } from 'vue'
+
+export function linkProvider() {
+  const colorMode = useColorMode()
+  const isLoaded = ref(false)
+
+  // Uygulama yüklendiğinde isLoaded'ı true yap
+  onMounted(() => {
+    isLoaded.value = true
+  })
+
   const defaultLinks = computed(() => [
     [{
       label: 'Tarık Kılıç Alsancak',
       avatar: {
         src: 'https://github.com/TarikKilic248.png',
+        alt: 'Tarık Kılıç Alsancak',
       },
       click: () => window.open('https://github.com/TarikKilic248'),
     }],
@@ -18,12 +30,15 @@ export const linkProvider = () => {
     }, {
       label: 'Pokemon List',
       icon: 'i-heroicons-bug-ant',
-      to: { name: 'pokemon' }
-    },{
-      label: 'Coming Soon..',
-      disabled: true,
-      icon: 'i-heroicons-question-mark-circle',
-    },{
+      to: { name: 'pokemon' },
+    }, {
+      label: 'TMDB',
+      icon: 'i-heroicons-tv',
+      to: { name: 'tmdb', params: {
+        media: 'movie',
+      } },
+    }, {
+
       class: 'flex items-center',
       // Yüklenme durumu için koşul ekliyoruz
       label: isLoaded.value && colorMode.value === 'dark' ? 'Dark' : 'Light',

@@ -39,6 +39,8 @@ export interface Pokemons {
 }
 
 export interface Media {
+  title: any
+  name: any
   adult: boolean
   backdrop_path: string
   genres: object
