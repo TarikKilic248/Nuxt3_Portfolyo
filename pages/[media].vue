@@ -8,32 +8,39 @@ definePageMeta({
 
 const route = useRouter()
 const tmdbStore = useTmdbStore()
+const currentMediaList = ref<Media[]>()
 
 onMounted(async () => {
   const media = route.currentRoute.value.params.media as 'movie' | 'tv'
+  tmdbStore.currentMediaType = media
+  tmdbStore.mediaPage = 1
   await tmdbStore.fetchMedia(media)
+  currentMediaList.value = tmdbStore.mediaList?.results
 })
 
-const visibleMediaList = ref<Media[]>()
-
 watch(() => tmdbStore.mediaList?.results, (newList) => {
-  visibleMediaList.value = []
+  if (tmdbStore.currentMediaType !== route.currentRoute.value.params.media) {
+    currentMediaList.value = []
 
-  setTimeout(() => {
-    visibleMediaList.value = newList || []
-  }, 400)
+    setTimeout(() => {
+      currentMediaList.value = newList || []
+    }, 400)
+  }
+  else if (newList && newList.length) {
+    currentMediaList.value?.push(...newList)
+  }
 })
 </script>
 
 <template>
   <NuxtLayout name="default">
-    <div class="h-16 py-1 flex justify-around myBorder ">
+    <div class="h-16 py-1 flex justify-around">
       <TmdbHeader />
     </div>
 
-    <TransitionGroup name="slide-fade" tag="div" class="grid grid-cols-8 gap-4 m-4 overflow-auto h-5/6 p-3">
+    <TransitionGroup name="slide-fade" tag="div" class="grid grid-cols-10 gap-4 m-4 overflow-auto h-5/6 p-3">
       <TmdbCard
-        v-for="(media, index) in visibleMediaList"
+        v-for="(media, index) in currentMediaList"
         :id="media.id"
         :key="media.id"
         :poster-path="media.poster_path"
@@ -44,7 +51,7 @@ watch(() => tmdbStore.mediaList?.results, (newList) => {
     </TransitionGroup>
 
     <div v-if="tmdbStore.mediaList" class="flex w-full justify-center">
-      <UButton v-model="add" block variant="soft" icon="i-heroicons-plus-circle" color="gray" />
+      <ButtonMore />
     </div>
 
     <div v-if="!tmdbStore.mediaList" class="fixed top-0 left-0 w-full h-full bg-gray-950 opacity-60 z-50 flex justify-center items-center">

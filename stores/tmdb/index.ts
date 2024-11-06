@@ -5,7 +5,7 @@ import type { MediaList } from '~/types'
 export const useTmdbStore = defineStore('tmdb', () => {
   const mediaList = ref<MediaList>()
   const mediaPage = ref(1)
-  const mediaTotalPage = ref(500)
+  const currentMediaType = ref<string>('movie')
 
   const apiKey = useRuntimeConfig().public.tmdbToken
 
@@ -34,6 +34,6 @@ export const useTmdbStore = defineStore('tmdb', () => {
 
     mediaList,
     mediaPage,
-    mediaTotalPage,
+    currentMediaType,
   }
 })
