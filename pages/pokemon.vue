@@ -145,7 +145,7 @@ function playCry(cryUrl: string) {
           </h4>
           <ul class="list-disc pl-4">
             <li v-for="(ability, index) in pokemonStore.selectedPokemon.features.abilities" :key="index">
-              {{ index }}, {{ ability.url }}
+              {{ index }}
             </li>
           </ul>
         </div>
@@ -156,7 +156,7 @@ function playCry(cryUrl: string) {
           </h4>
           <ul class="list-disc pl-4">
             <li v-for="(stast, index) in pokemonStore.selectedPokemon.features.stats" :key="index">
-              {{ index }}, {{ stast.base_stat }}, {{ stast.url }}
+              {{ index }}, {{ stast.base_stat }}
             </li>
           </ul>
         </div>
@@ -167,7 +167,7 @@ function playCry(cryUrl: string) {
           </h4>
           <ul class="list-disc pl-4">
             <li v-for="(types, index) in pokemonStore.selectedPokemon.features.types" :key="index">
-              {{ index }}, slot {{ types.slot }}, {{ types.url }}
+              {{ index }}, slot {{ types.slot }}
             </li>
           </ul>
         </div>

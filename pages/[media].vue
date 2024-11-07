@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useTmdbStore } from '~/stores/tmdb'
-import type { Media } from '~/types'
 
 definePageMeta({
   name: 'tmdb',
@@ -8,55 +7,30 @@ definePageMeta({
 
 const route = useRouter()
 const tmdbStore = useTmdbStore()
-const currentMediaList = ref<Media[]>()
 
 onMounted(async () => {
-  const media = route.currentRoute.value.params.media as 'movie' | 'tv'
-  tmdbStore.currentMediaType = media
   tmdbStore.mediaPage = 1
-  await tmdbStore.fetchMedia(media)
-  currentMediaList.value = tmdbStore.mediaList?.results
-})
-
-watch(() => tmdbStore.mediaList?.results, (newList) => {
-  if (tmdbStore.currentMediaType !== route.currentRoute.value.params.media) {
-    currentMediaList.value = []
-
-    setTimeout(() => {
-      currentMediaList.value = newList || []
-    }, 400)
-  }
-  else if (newList && newList.length) {
-    currentMediaList.value?.push(...newList)
-  }
+  await tmdbStore.fetchMedia(route.currentRoute.value.params.media as 'movie' | 'tv')
+  tmdbStore.currentMediaList = tmdbStore.mediaList?.results
 })
 </script>
 
 <template>
   <NuxtLayout name="default">
-    <div class="h-16 py-1 flex justify-around">
-      <TmdbHeader />
-    </div>
-
-    <TransitionGroup name="slide-fade" tag="div" class="grid grid-cols-10 gap-4 m-4 overflow-auto h-5/6 p-3">
+    <TmdbHeader />
+    <TransitionGroup name="slide-fade" tag="div" class="grid lg:grid-cols-10 sm:grid-cols-5 grid-cols-2 gap-4 m-4 overflow-auto h-5/6 p-4">
       <TmdbCard
-        v-for="(media, index) in currentMediaList"
+        v-for="(media, index) in tmdbStore.filterList"
         :id="media.id"
         :key="media.id"
         :poster-path="media.poster_path"
         :vote-average="media.vote_average"
         :name="media.name || media.title"
-        :style="{ transitionDelay: `${index * 100}ms` }"
+        :style="{ transitionDelay: `${(index % tmdbStore.mediaList?.results.length!) * 100}ms` }"
       />
     </TransitionGroup>
-
-    <div v-if="tmdbStore.mediaList" class="flex w-full justify-center">
-      <ButtonMore />
-    </div>
-
-    <div v-if="!tmdbStore.mediaList" class="fixed top-0 left-0 w-full h-full bg-gray-950 opacity-60 z-50 flex justify-center items-center">
-      <div class="h-6 w-6 border animate-spin" />
-    </div>
+    <ButtonMore />
+    <LoadingScreen />
   </NuxtLayout>
 </template>
 

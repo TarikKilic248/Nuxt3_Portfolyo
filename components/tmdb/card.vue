@@ -3,7 +3,7 @@ import { defineProps } from 'vue'
 
 const props = defineProps<{
   id: number
-  posterPath: string
+  posterPath: string | null
   voteAverage: number
   name: string
 }>()
@@ -13,8 +13,8 @@ const props = defineProps<{
   <div>
     <div class="aspect-10/16 transition duration-400 hover:scale-105 z10">
       <img
-        :src="`https://image.tmdb.org/t/p/w500${props.posterPath}`"
-        alt="deneme"
+        :src="props.posterPath ? `https://image.tmdb.org/t/p/w500${props.posterPath}` : ''"
+        alt="Media Poster"
         class="w-full h-full object-cover"
       >
     </div>
