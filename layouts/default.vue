@@ -18,7 +18,17 @@ const { defaultLinks } = linkProvider()
       <UHorizontalNavigation
         :links="defaultLinks"
         class="shadow-xl"
-      />
+      >
+        <template #default="{ link }">
+          <div class="flex items-center space-x-2">
+            <!-- İkon görünür olacak şekilde -->
+            <IconComponent :icon="link.icon" />
+            <!-- Etiket küçük ekranlarda gizli, büyük ekranlarda görünür -->
+            <span class="hidden md:block">{{ link.label }}</span>
+          </div>
+        </template>
+      </UHorizontalNavigation>
+
       <div class="w-full h-full p-2 overflow-hidden">
         <slot />
       </div>

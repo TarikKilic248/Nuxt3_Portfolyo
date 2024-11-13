@@ -8,14 +8,9 @@ const tmdbStore = useTmdbStore()
 
 function toggleFilters() {
   showFilters.value = !showFilters.value
-  tmdbStore.filterAdult = undefined
   tmdbStore.filterReleaseDate = undefined
   tmdbStore.filterTitle = undefined
-}
-
-function getCurrentMonth() {
-  const now = new Date()
-  return now.getMonth() + 1
+  tmdbStore.filterReleaseDate = undefined
 }
 
 function getCurrentYear() {
@@ -24,14 +19,14 @@ function getCurrentYear() {
 }
 
 const options = [{
-  value: getCurrentMonth(),
-  label: 'This Month',
-}, {
   value: getCurrentYear(),
   label: 'This Year',
 }, {
-  value: 1800,
-  label: 'All',
+  value: getCurrentYear() - 10,
+  label: 'Last 10 Years',
+}, {
+  value: 1000,
+  label: 'All Years',
 }]
 </script>
 
@@ -70,7 +65,7 @@ const options = [{
 
           <UInput
             v-model="tmdbStore.filterTitle"
-            class="flex h-10 mt-2"
+            class="flex h-10 lg:w-52 w-24"
             icon="i-heroicons-magnifying-glass-20-solid"
             size="sm"
             color="cyan"
@@ -78,9 +73,10 @@ const options = [{
             placeholder="Search..."
           />
           <div>
-            Adult
-            <UToggle v-model="tmdbStore.filterAdult" color="cyan" />
+            Vote Count: {{ tmdbStore.filterVoteCount ? tmdbStore.filterVoteCount.toLocaleString() : '0' }}
+            <URange v-model="tmdbStore.filterVoteCount" color="cyan" size="md" class="w-40" :step="50" :min="0" :max="2000" />
           </div>
+
           <URadioGroup v-model="tmdbStore.filterReleaseDate" class="" legend="Release Date" :options="options" />
         </div>
       </Transition>
@@ -237,5 +233,40 @@ label:last-child span {
 
 .pushable:focus:not(:focus-visible) {
   outline: none;
+}
+
+@media (max-width: 600px) {
+  .pushable {
+    padding: 0;
+  }
+
+  .front {
+    padding: 8px 16px;
+    font-size: 0.8rem;
+  }
+}
+
+/* Styles for medium screens (e.g., tablets) */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .pushable {
+    padding: 0;
+  }
+
+  .front {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+}
+
+/* Styles for larger screens (e.g., desktop) */
+@media (min-width: 1025px) {
+  .pushable {
+    padding: 0;
+  }
+
+  .front {
+    padding: 16px 32px;
+    font-size: 1.2rem;
+  }
 }
 </style>

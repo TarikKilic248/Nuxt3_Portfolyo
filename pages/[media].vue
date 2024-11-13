@@ -18,13 +18,15 @@ onMounted(async () => {
 <template>
   <NuxtLayout name="default">
     <TmdbHeader />
-    <TransitionGroup name="slide-fade" tag="div" class="grid lg:grid-cols-10 sm:grid-cols-5 grid-cols-2 gap-4 m-4 overflow-auto h-5/6 p-4">
+    <TransitionGroup name="slide-fade" tag="div" class="grid lg:grid-cols-5 sm:grid-cols-4 grid-cols-2 gap-4 m-4 overflow-auto h-5/6 p-4">
       <TmdbCard
         v-for="(media, index) in tmdbStore.filterList"
-        :id="media.id"
-        :key="media.id"
+        :key="`${media.id}-${index}`"
+        :mediaid="media.id"
         :poster-path="media.poster_path"
         :vote-average="media.vote_average"
+        :vote-count="media.vote_count"
+        :popularity="media.popularity"
         :name="media.name || media.title"
         :style="{ transitionDelay: `${(index % tmdbStore.mediaList?.results.length!) * 100}ms` }"
       />

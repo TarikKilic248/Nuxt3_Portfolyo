@@ -39,6 +39,8 @@ export interface Pokemons {
 }
 
 export interface Media {
+  first_air_date: string
+  release_date: string
   title: any
   name: any
   adult: boolean

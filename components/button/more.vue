@@ -7,7 +7,7 @@ const tmdbStore = useTmdbStore()
 <template>
   <div v-if="tmdbStore.mediaList" class="flex w-full justify-center">
     <button
-      class="cursor-pointer flex justify-between bg-gray-800 px-3 py-2 rounded-full text-white tracking-wider shadow-xl hover:bg-gray-900 hover:scale-105 duration-500 hover:ring-1 font-mono w-[150px]"
+      class="cursor-pointer flex justify-between dark:bg-gray-800 bg-slate-300 px-3 py-2 rounded-full text-black dark:text-white tracking-wider shadow-xl dark:hover:bg-gray-900 hover:bg-gray-400 hover:scale-105 duration-500 hover:ring-1 font-mono w-[150px]"
       @click="tmdbStore.loadMoreMediaList()"
     >
       Add More

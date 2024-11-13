@@ -1,6 +1,5 @@
 import { useRuntimeConfig } from 'nuxt/app'
 import { ref } from 'vue'
-import type Media from '~/pages/[media].vue'
 import type { Media, MediaList } from '~/types'
 
 export const useTmdbStore = defineStore('tmdb', () => {
@@ -8,9 +7,9 @@ export const useTmdbStore = defineStore('tmdb', () => {
   const mediaPage = ref(1)
   const currentMediaList = ref<Media[]>()
 
-  const filterAdult = ref()
   const filterTitle = ref()
   const filterReleaseDate = ref()
+  const filterVoteCount = ref()
 
   const apiKey = useRuntimeConfig().public.tmdbToken
 
@@ -24,7 +23,7 @@ export const useTmdbStore = defineStore('tmdb', () => {
   )
 
   const fetchMedia = async (media: 'movie' | 'tv') => {
-    const url = `https://api.themoviedb.org/3/discover/${media}?language=en-US&page=${mediaPage.value}&sort_by=popularity.desc`
+    const url = `https://api.themoviedb.org/3/discover/${media}?language=en-US&include_video=true&page=${mediaPage.value}&sort_by=popularity.desc`
     const options = {
       method: 'GET',
       headers: {
@@ -53,11 +52,17 @@ export const useTmdbStore = defineStore('tmdb', () => {
 
   const filterList = computed(() => {
     return currentMediaList.value?.filter((media: Media) => {
-      const matchesAdult = filterAdult.value === undefined || media.adult === filterAdult.value
-      const matchesTitle = !filterTitle.value || (media.title || media.name)?.toLowerCase().includes(filterTitle.value.toLowerCase())
-      const matchesReleaseDate = !filterReleaseDate.value || (media.release_date >= filterReleaseDate.value || media.first_air_date >= filterReleaseDate.value)
+      const matchesTitle = !filterTitle.value
+        || (media.title || media.name)?.toLowerCase().includes(filterTitle.value.toLowerCase())
 
-      return matchesAdult && matchesTitle && matchesReleaseDate
+      const matchesReleaseDate = !filterReleaseDate.value
+        || (media.release_date && Number(media.release_date.split('-')[0]) >= filterReleaseDate.value)
+        || (media.first_air_date && Number(media.first_air_date.split('-')[0]) >= filterReleaseDate.value)
+
+      const matchesVoteCount = !filterVoteCount.value
+        || media.vote_count >= filterVoteCount.value
+
+      return matchesTitle && matchesReleaseDate && matchesVoteCount
     })
   })
 
@@ -69,9 +74,9 @@ export const useTmdbStore = defineStore('tmdb', () => {
     mediaPage,
     currentMediaList,
 
-    filterAdult,
     filterTitle,
     filterReleaseDate,
+    filterVoteCount,
     filterList,
   }
 })
