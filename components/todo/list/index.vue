@@ -1,19 +1,20 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useUserStore } from '~/stores/todo/user'
+import { useTodoStore } from '~/stores/todo'
 
-const userStore = useUserStore()
+const todoStore = useTodoStore()
+
 const filterType = ref('All')
 
 const selectedUserTodo = computed(() => {
   switch (filterType.value) {
     case 'Done':
-      return userStore.selectedUser?.todos.filter(todo => todo.completed === true)
+      return todoStore.selectedUser?.todos.filter(todo => todo.completed === true)
     case 'Not Done':
-      return userStore.selectedUser?.todos.filter(todo => todo.completed === false)
+      return todoStore.selectedUser?.todos.filter(todo => todo.completed === false)
     case 'All':
     default:
-      return userStore.selectedUser?.todos
+      return todoStore.selectedUser?.todos
   }
 })
 
@@ -24,11 +25,11 @@ function handleButtonClick(button: string) {
 
 <template>
   <div>
-    <div class="flex gap-2 mb-4 justify-between myBorder items-center">
+    <div class="flex gap-2 mb-4 justify-between items-center">
       <ButtonSmall
         v-for="item in ['All', 'Not Done', 'Done']"
         :key="item"
-        class="flex justify-between myBorder items-center"
+        class="flex justify-between items-center"
         :label="item"
         @click="handleButtonClick(item)"
       />
@@ -36,9 +37,9 @@ function handleButtonClick(button: string) {
 
     <TransitionGroup name="list" tag="div" class="flex flex-col gap-3">
       <div
-        v-for="todo in selectedUserTodo"
-        :key="todo.id"
-        class="myBorder gap-4 w-full flex justify-between px-3 py-2"
+        v-for="(todo, index) in selectedUserTodo"
+        :key="index"
+        class="gap-4 w-full flex justify-between px-3 py-2 border-b"
       >
         <div :class="`h-4 w-4 border rounded-full mt-1 ${todo.completed ? 'bg-green-400' : ''}`" />
         <div class="flex w-full items-center">

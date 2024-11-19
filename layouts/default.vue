@@ -21,9 +21,8 @@ const { defaultLinks } = linkProvider()
       >
         <template #default="{ link }">
           <div class="flex items-center space-x-2">
-            <!-- İkon görünür olacak şekilde -->
-            <IconComponent :icon="link.icon" />
-            <!-- Etiket küçük ekranlarda gizli, büyük ekranlarda görünür -->
+            <!-- Font Awesome örneği -->
+            <i :class="link.icon" />
             <span class="hidden md:block">{{ link.label }}</span>
           </div>
         </template>

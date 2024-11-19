@@ -11,7 +11,7 @@ const router = useRouter()
 
 <template>
   <NuxtLayout>
-    <div class="w-full h-full flex justify-center items-center gap-6">
+    <div class="w-full h-full flex flex-col lg:flex-row justify-center items-center gap-6">
       <ButtonGiant label="Todo List" @click="router.push({ name: 'todo' })" />
       <ButtonGiant
         label="Pokemon List"

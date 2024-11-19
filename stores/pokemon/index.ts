@@ -32,8 +32,8 @@ export const usePokemonStore = defineStore('pokemon', () => {
     })
   })
 
-  pokemonPageStore.totalPage = computed(() => {
-    return filteredRows.value?.length
+  pokemonPageStore.totalPage = computed<number>(() => {
+    return filteredRows.value?.length ?? 0
   })
 
   const mappedRows = computed(() => {

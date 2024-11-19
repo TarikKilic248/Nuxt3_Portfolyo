@@ -32,7 +32,7 @@ onMounted(async () => {
       />
     </TransitionGroup>
     <ButtonMore />
-    <LoadingScreen />
+    <LoadingScreen :api="tmdbStore.mediaList" />
   </NuxtLayout>
 </template>
 

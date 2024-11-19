@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { TmdbCard } from '#build/components'
 import { ref } from 'vue'
 import { useTmdbStore } from '~/stores/tmdb'
 
@@ -11,6 +10,7 @@ function toggleFilters() {
   tmdbStore.filterReleaseDate = undefined
   tmdbStore.filterTitle = undefined
   tmdbStore.filterReleaseDate = undefined
+  tmdbStore.filterVoteCount = undefined
 }
 
 function getCurrentYear() {
@@ -31,7 +31,7 @@ const options = [{
 </script>
 
 <template>
-  <div class="flex w-full h-10 lg:h-16 justify-center">
+  <div class="flex w-full h-30 sm:h-20 lg:h-20 justify-center">
     <div class="flex justify-start h-10 lg:h-16">
       <button class="pushable" @click="toggleFilters">
         <span class="shadow" />
@@ -60,7 +60,7 @@ const options = [{
           </button>
         </div>
 
-        <div v-else class="flex justify-around w-full ">
+        <div v-else class="flex flex-wrap justify-around w-full ">
           <!-- Filter options, replace with actual filters as needed -->
 
           <UInput
@@ -74,7 +74,7 @@ const options = [{
           />
           <div>
             Vote Count: {{ tmdbStore.filterVoteCount ? tmdbStore.filterVoteCount.toLocaleString() : '0' }}
-            <URange v-model="tmdbStore.filterVoteCount" color="cyan" size="md" class="w-40" :step="50" :min="0" :max="2000" />
+            <URange v-model="tmdbStore.filterVoteCount" color="cyan" size="md" class="w-32 lg:w-60" :step="50" :min="0" :max="2000" />
           </div>
 
           <URadioGroup v-model="tmdbStore.filterReleaseDate" class="" legend="Release Date" :options="options" />

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useUserStore } from '~/stores/todo/user'
+import { useTodoStore } from '~/stores/todo'
 
-const userStore = useUserStore()
+const todoStore = useTodoStore()
 
-const src = computed(() => userStore.selectedUser?.picture)
+const src = computed(() => todoStore.selectedUser?.picture.thumbnail)
 </script>
 
 <template>

@@ -1,16 +1,7 @@
 <script setup lang="ts">
 import { useTodoStore } from '~/stores/todo'
-import { useUserStore } from '~/stores/todo/user'
-import type { UserWithTodo } from '~/types'
 
 const todoStore = useTodoStore()
-const userStore = useUserStore()
-
-const selectedUser = ref < UserWithTodo > ()
-
-function selectUser() {
-  userStore.selectedUser = selectedUser.value
-}
 
 onMounted(async () => {
   if (!todoStore.todoList)
@@ -20,11 +11,10 @@ onMounted(async () => {
 
 <template>
   <USelectMenu
-    v-model="selectedUser"
+    v-model="todoStore.selectedUser"
     class="xs:w-40 w-60"
-    :options="todoStore.UserWithTodo"
+    :options="todoStore.userWithTodo"
     placeholder="Select a person"
     option-attribute="name"
-    @change="selectUser"
   />
 </template>
