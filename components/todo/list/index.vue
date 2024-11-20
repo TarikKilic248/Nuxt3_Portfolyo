@@ -25,7 +25,7 @@ function handleButtonClick(button: string) {
 
 <template>
   <div>
-    <div class="flex gap-2 mb-4 justify-between items-center">
+    <div class="flex gap-2 mb-4 justify-around items-center">
       <ButtonSmall
         v-for="item in ['All', 'Not Done', 'Done']"
         :key="item"

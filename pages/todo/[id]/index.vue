@@ -34,8 +34,8 @@ onMounted(async () => {
 
 <template>
   <NuxtLayout name="default">
-    <div v-if="todoStore.selectedUser" class="p-3 flex flex-col gap-5 lg:flex-row w-full h-full">
-      <div class="flex flex-col h-full gap-10 overflow-auto px-5 border-r-2">
+    <div v-if="todoStore.selectedUser" class="p-3 flex flex-col gap-5 overflow-auto lg:flex-row w-full h-full">
+      <div class="flex flex-col h-full gap-10 px-5 lg:border-r-2">
         <TodoUserCard />
         <TodoDetails />
       </div>
