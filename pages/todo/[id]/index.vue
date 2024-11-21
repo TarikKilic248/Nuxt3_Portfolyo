@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useRoute, useRouter } from 'vue-router'
 import { useTodoStore } from '~/stores/todo'
 
 definePageMeta({
@@ -22,7 +21,7 @@ onMounted(async () => {
     return
   }
 
-  const foundUser = todoStore.userWithTodo?.find(user => user.id === userId)
+  const foundUser = todoStore.userWithTodo?.find((user: { id: number }) => user.id === userId)
   if (foundUser) {
     todoStore.selectedUser = foundUser
   }

@@ -17,6 +17,7 @@ const { defaultLinks } = linkProvider()
     >
       <UHorizontalNavigation
         :links="defaultLinks"
+
         class="shadow-xl"
       >
         <template #default="{ link }">

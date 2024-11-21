@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useTmdbStore } from '~/stores/tmdb'
 
 const showFilters = ref(false)
@@ -33,7 +32,7 @@ const options = [{
 <template>
   <div class="flex w-full h-30 sm:h-20 lg:h-20 justify-center">
     <div class="flex justify-start h-10 lg:h-16">
-      <button class="pushable" @click="toggleFilters">
+      <button class="pushable" @click="toggleFilters()">
         <span class="shadow" />
         <span class="edge" />
         <span class="front">

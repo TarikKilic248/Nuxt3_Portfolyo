@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { _max } from '#tailwind-config/theme/gridAutoColumns'
-import { computed, onMounted, ref } from 'vue'
 import { usePokemonStore } from '~/stores/pokemon'
 import { usePokemonPage } from '~/stores/pokemon/pages'
 

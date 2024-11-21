@@ -24,7 +24,7 @@ export const usePokemonStore = defineStore('pokemon', () => {
       const attack = pokemon.stats.attack.base_stat
 
       const Poketypes = Object.keys(pokemon.types)
-      const matchesType = pokemonPageStore.typeSelected.length === 0 || pokemonPageStore.typeSelected.some(type => Poketypes.includes(type))
+      const matchesType = pokemonPageStore.typeSelected.length === 0 || pokemonPageStore.typeSelected.some((type: string) => Poketypes.includes(type))
 
       const matchesInput = pokemon.name.toLowerCase().includes(pokemonPageStore.inputSelected.toLowerCase())
 

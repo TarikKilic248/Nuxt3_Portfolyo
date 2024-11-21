@@ -1,5 +1,4 @@
 import { useColorMode } from '@vueuse/core'
-import { computed, onMounted, ref } from 'vue'
 
 export function linkProvider() {
   const colorMode = useColorMode()

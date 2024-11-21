@@ -15,11 +15,11 @@ const { count, inc, dec, reset } = useCounter(0, { min: 0, max: 10 })
   <NuxtLayout>
     <div class="w-full h-full flex flex-col lg:flex-row border-2">
       <div>
-        <p>Count: {{ count }}</p> <button @click="inc">
+        <p>Count: {{ count }}</p> <button class="border-2" @click="inc">
           Increment
-        </button> <button @click="dec">
+        </button> <button class="border-2" @click="dec">
           Decrement
-        </button> <button @click="reset">
+        </button> <button class="border-2" @click="reset">
           Reset
         </button>
       </div>

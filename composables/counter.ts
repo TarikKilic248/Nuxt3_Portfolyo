@@ -1,5 +1,3 @@
-import { ref } from 'vue'
-
 interface UseCounterOptions {
   min?: number
   max?: number
