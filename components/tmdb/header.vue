@@ -46,13 +46,23 @@ const options = [{
       <Transition name="slide-up" mode="out-in">
         <!-- Show either Movies/TV Shows buttons or the filter options -->
         <div v-if="!showFilters" class="flex justify-around w-full h-10 lg:h-16">
-          <button class="pushable " @click="$router.push('/movie')">
+          <button
+            class="pushable " @click="() => {
+              tmdbStore.mediaList = undefined
+              $router.push('/movie')
+            }"
+          >
             <span class="shadow" />
             <span class="edge" />
             <span class="front"> Movies </span>
           </button>
 
-          <button class="pushable" @click="$router.push('/tv')">
+          <button
+            class="pushable" @click="() => {
+              tmdbStore.mediaList = undefined
+              $router.push('/tv')
+            }"
+          >
             <span class="shadow" />
             <span class="edge" />
             <span class="front"> TV Shows </span>

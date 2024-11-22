@@ -42,7 +42,7 @@ watch(() => pokemonStore.pokemonLimit, async () => {
         <UPagination v-model="pokemonPageStore.page" :page-count="pokemonPageStore.pageCount" :total="pokemonPageStore?.totalPage" />
       </div>
     </div>
+    <LoadingScreen :api="pokemonStore.pokemons" />
+    <PokemonDetails />
   </NuxtLayout>
-  <PokemonDetails />
-  <LoadingScreen :api="pokemonStore.pokemons" />
 </template>

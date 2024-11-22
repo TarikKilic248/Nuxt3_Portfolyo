@@ -11,16 +11,6 @@ onMounted(async () => {
   await todoStore.fetchTodoList()
 })
 
-function navigateToTodo() {
-  const userId = todoStore.selectedUser?.id
-  navigateTo({
-    name: 'todoDetail',
-    params: {
-      id: userId,
-    },
-  })
-}
-
 // GÖREV 2
 // elindeki userId lere göre bu kullanıcıların resimlerini ve isimlerini göstermelisin https://randomuser.me/
 // bunun için Todo tipini değiştirmen gerekecek yeni tipte nasıl bir yapı izleyeceğin çok önemli.
@@ -33,15 +23,25 @@ function navigateToTodo() {
 <template>
   <NuxtLayout name="default">
     <div class="w-full h-full flex flex-col lg:flex-row p-4 gap-4">
-      <div class="w-full lg:h-full h-2/6 flex flex-col lg:justify-center justify-between items-center gap-3 myBorder p-4">
+      <div class="w-full lg:h-full h-2/6 flex flex-col -mt-5 lg:justify-center justify-between items-center gap-3 p-4">
         <TodoUserProfileImage />
         <TodoUserSearchProfile />
-        <ButtonSmall label="Görevlere git" @click="navigateToTodo" />
+        <ButtonSmall
+          v-if="todoStore.selectedUser"
+          label="Görevlere git"
+          @click="useRouter().push({ name: 'todoDetail', params: { id: todoStore.selectedUser?.id } })"
+        />
       </div>
 
-      <div class="myBorder lg:w-4/5 flex flex-col overflow-auto">
-        <TodoList class="w-full h-full myBorder p-4 overflow-auto" />
-      </div>
+      <!-- Animasyon için transition -->
+      <Transition name="fade-slide">
+        <div
+          v-if="todoStore.selectedUser"
+          class="myBorder lg:w-4/5 flex flex-col overflow-auto"
+        >
+          <TodoList class="w-full h-full myBorder p-4 overflow-auto" />
+        </div>
+      </Transition>
     </div>
   </NuxtLayout>
 </template>
@@ -49,5 +49,31 @@ function navigateToTodo() {
 <style>
 .myBorder {
   @apply border rounded dark:border-gray-700 border-gray-300
+}
+
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.5s ease;
+  transition-delay: 0.2ms;
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.fade-slide-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-slide-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
 }
 </style>

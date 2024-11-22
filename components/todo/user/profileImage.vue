@@ -3,7 +3,7 @@ import { useTodoStore } from '~/stores/todo'
 
 const todoStore = useTodoStore()
 
-const src = computed(() => todoStore.selectedUser?.picture.thumbnail)
+const src = computed(() => todoStore.selectedUser?.picture.medium)
 </script>
 
 <template>
@@ -15,14 +15,14 @@ const src = computed(() => todoStore.selectedUser?.picture.thumbnail)
     </div>
 
     <div v-else>
-      <img :src="src" alt="User Profile" class="w-16 h-16 rounded-full">
+      <img :src="src" alt="User Profile" class="w-20 h-20 rounded-full">
     </div>
   </div>
 </template>
 
 <style scoped>
 .size-12 {
-  width: 3rem;
-  height: 3rem;
+  width: 7rem;
+  height: 7rem;
 }
 </style>

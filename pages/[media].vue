@@ -18,7 +18,7 @@ onMounted(async () => {
 <template>
   <NuxtLayout name="default">
     <TmdbHeader />
-    <TransitionGroup name="slide-fade" tag="div" class="grid lg:grid-cols-5 sm:grid-cols-4 grid-cols-2 gap-4 m-4 overflow-auto h-5/6 p-4">
+    <TransitionGroup name="slide-fade" tag="div" class="grid lg:grid-cols-10 sm:grid-cols-4 grid-cols-2 mt-3 gap-4 overflow-auto h-5/6 p-4">
       <TmdbCard
         v-for="(media, index) in tmdbStore.filterList"
         :key="`${media.id}-${index}`"
