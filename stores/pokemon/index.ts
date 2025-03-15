@@ -7,8 +7,8 @@ export const usePokemonStore = defineStore('pokemon', () => {
   const pokemons = ref<Pokemons[]>()
   const types = ref()
   const selectedPokemon = ref()
-  const pokemonLimit = ref(300)
-  const pokemonTypeUrl = `${useRuntimeConfig().public.pokemonTypeUrl}` // burada ref degiskeni ile islem yapilmiyor
+  const pokemonLimit = ref(200)
+  const pokemonTypeUrl = 'https://pokeapi.co/api/v2/type' // burada ref degiskeni ile islem yapilmiyor
 
   const pokemonColumns = [
     { key: 'name', label: 'Name' },
@@ -61,7 +61,8 @@ export const usePokemonStore = defineStore('pokemon', () => {
 
   const fetchPokemonApi = async () => {
     try {
-      const response = await fetch(`${useRuntimeConfig().public.pokemonUrl}?limit=${pokemonLimit.value}`)
+      console.log('pokemonLimit.value:', pokemonLimit.value)
+      const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${pokemonLimit.value}`)
       const data = await response.json()
 
       const fetchedPokemons = await Promise.all(
