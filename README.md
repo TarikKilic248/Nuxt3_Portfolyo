@@ -1,5 +1,5 @@
 # Nuxt 3 Portfolyo
-[Proje linki](mynuxtportfolyo.netlify.app)
+[Proje linki]([mynuxtportfolyo.netlify.app](https://mynuxtportfolyo.netlify.app/))
 
 Bu proje, Nuxt 3, TailwindCSS ve Nuxt UI kullanarak oluşturulmuş bir portfolyodur. İçerisinde üç farklı proje bulunmaktadır:
 
